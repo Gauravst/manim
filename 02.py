@@ -39,14 +39,23 @@ class Main(Scene):
             squareWithNumber = VGroup(square, number)
             squaresWithNumbers.append(squareWithNumber)
 
+        pointer = Text("i", color=WHITE, font="Poppins")
+        pointer.next_to(squaresWithNumbers[0], DOWN)
+        self.add(pointer)
 
 
-        original_position = squaresWithNumbers[0].get_center()
-        original_border = Rectangle(
-            width=square_size, height=square_size, color=YELLOW, stroke_width=4
-        ).move_to(original_position)
+        originalPositions = []
+        for i in range(2):
 
-        self.add(original_border)
+            originalPosition = squaresWithNumbers[i].get_center()
+            originalPositions.append(originalPosition)
+
+            originalBorder = Rectangle(
+                width=square_size, height=square_size, color=YELLOW, stroke_width=4
+            ).move_to(originalPosition)
+            
+            self.add(originalBorder)
+
         self.add(*squaresWithNumbers)
 
 
@@ -56,10 +65,19 @@ class Main(Scene):
 
 
         self.wait(2)
-        self.play(squaresWithNumbers[0].animate.move_to(ORIGIN + UP * 1.5 + LEFT * 1).set_color(RED))
-        
+
+        self.play(squaresWithNumbers[0].animate.move_to(ORIGIN + UP * 1.5 + LEFT * 1).set_color(GREEN))
+        self.play(squaresWithNumbers[1].animate.move_to(ORIGIN + UP * 1.5 + RIGHT * 1).set_color(GREEN))
+
         self.play(Write(comparison)) 
-        self.play(squaresWithNumbers[1].animate.move_to(ORIGIN + UP * 1.5 + RIGHT * 1).set_color(RED))
+
+        if numbers[0] > numbers[1]:
+            squaresWithNumbers[0].set_color(RED)
+
+            self.play(squaresWithNumbers[0].animate.move_to(originalPositions[1]).set_color(GREEN))
+            self.play(squaresWithNumbers[1].animate.move_to(originalPositions[0]).set_color(GREEN))
+
+            self.play(pointer.animate.move_to(originalPositions[1] + DOWN * 0.5))
 
 
         self.wait(2)
